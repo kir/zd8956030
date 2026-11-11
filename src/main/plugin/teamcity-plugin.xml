@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<teamcity-plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:noNamespaceSchemaLocation="urn:schemas-jetbrains-com:teamcity-plugin-v1-xml">
+  <info>
+    <name>zd8956030</name>
+    <display-name>ZD-8956030 JSON/XML diagnostics</display-name>
+    <description>Logs requests accepting JSON that complete with an XML content type.</description>
+    <version>${project.version}</version>
+    <vendor><name>JetBrains</name></vendor>
+  </info>
+  <requirements min-build="222577"/>
+  <deployment use-separate-classloader="true"
+              allow-runtime-reload="true"
+              node-responsibilities-aware="true"/>
+</teamcity-plugin>

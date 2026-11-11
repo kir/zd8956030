@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>jetbrains.maxkir.zd8956030</groupId>
+  <artifactId>zd8956030</artifactId>
+  <version>1.0.1</version>
+  <name>ZD-8956030 JSON/XML diagnostics</name>
+  <description>Reports JSON Accept requests completed with an XML content type.</description>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.release>21</maven.compiler.release>
+    <teamcity.version>2026.1-SNAPSHOT</teamcity.version>
+    <teamcity.repository.url>https://packages.jetbrains.team/maven/p/tc/maven</teamcity.repository.url>
+    <maven.compiler.version>3.14.1</maven.compiler.version>
+    <maven.surefire.version>3.5.3</maven.surefire.version>
+    <maven.jar.version>3.4.2</maven.jar.version>
+    <maven.assembly.version>3.7.1</maven.assembly.version>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>teamcity</id>
+      <url>${teamcity.repository.url}</url>
+      <snapshots><enabled>true</enabled></snapshots>
+    </repository>
+  </repositories>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.jetbrains.teamcity</groupId>
+        <artifactId>bom</artifactId>
+        <version>${teamcity.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <!-- Internal API: deliberately compile against the same TeamCity release line. -->
+    <dependency>
+      <groupId>org.jetbrains.teamcity</groupId>
+      <artifactId>web-core</artifactId>
+      <scope>provided</scope>
+      <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.teamcity</groupId>
+      <artifactId>web-openapi</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.teamcity</groupId>
+      <artifactId>test-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven.surefire.version}</version>
+        <configuration>
+          <systemPropertyVariables>
+            <!-- The cached 2026.1 test harness references a context-map class removed in its current Log4j dependency. -->
+            <log4j2.threadContextMap>org.apache.logging.log4j.spi.DefaultThreadContextMap</log4j2.threadContextMap>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>${maven.jar.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>${maven.assembly.version}</version>
+        <executions>
+          <execution>
+            <id>teamcity-plugin</id>
+            <phase>package</phase>
+            <goals><goal>single</goal></goals>
+            <configuration>
+              <descriptors><descriptor>src/assembly/plugin.xml</descriptor></descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
